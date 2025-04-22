@@ -32,8 +32,8 @@ jobs:
           context: ./Gateserver
           file: ./Gateserver/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gataserver:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gataserver:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gateserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gateserver:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/gateserver:latest
 
       - name: Build and Push Statusserver Image
