@@ -1,0 +1,89 @@
+name: Monorepo CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy All Services
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Gateserver Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Gateserver
+          file: ./Gateserver/Dockerfile
+          push: true
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/gataserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/gataserver:cache, mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/gateserver:latest
+
+      - name: Build and Push Statusserver Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./StatusServer
+          file: ./StatusServer/Dockerfile
+          push: true
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/statusserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/statusserver:cache, mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/statusserver:latest
+      
+      - name: Build and Push Chatserver Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ChatServer
+          file: ./ChatServer/Dockerfile
+          push: true
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver:cache, mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/chatserver:latest
+
+      - name: Build and Push Chatserver2 Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ChatServer2
+          file: ./ChatServer2/Dockerfile
+          push: true
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver2:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver2:cache, mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/chatserver2:latest
+
+      - name: Build and Push Varifyserver Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./VarifyServer
+          file: ./VarifyServer/Dockerfile
+          push: true
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/varifyserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/varifyserver:cache, mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/varifyserver:latest
+
+      - name: Deploy to Cloud Server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 1022
+          script: |
+            cd CChat
+            docker-compose pull
+            docker-compose up -d
