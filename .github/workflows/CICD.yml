@@ -85,5 +85,5 @@ jobs:
           port: 1022
           script: |
             cd CChat
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
