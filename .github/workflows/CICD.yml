@@ -78,6 +78,7 @@ jobs:
 
       - name: Deploy to Cloud Server via SSH
         uses: appleboy/ssh-action@master
+        timeout-minutes: 20
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
