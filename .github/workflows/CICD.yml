@@ -32,8 +32,8 @@ jobs:
           context: ./Gateserver
           file: ./Gateserver/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/gataserver:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/gataserver:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gataserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/gataserver:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/gateserver:latest
 
       - name: Build and Push Statusserver Image
@@ -42,8 +42,8 @@ jobs:
           context: ./StatusServer
           file: ./StatusServer/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/statusserver:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/statusserver:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/statusserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/statusserver:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/statusserver:latest
       
       - name: Build and Push Chatserver Image
@@ -52,8 +52,8 @@ jobs:
           context: ./ChatServer
           file: ./ChatServer/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/chatserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/chatserver:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/chatserver:latest
 
       - name: Build and Push Chatserver2 Image
@@ -62,8 +62,8 @@ jobs:
           context: ./ChatServer2
           file: ./ChatServer2/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver2:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/chatserver2:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/chatserver2:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/chatserver2:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/chatserver2:latest
 
       - name: Build and Push Varifyserver Image
@@ -72,8 +72,8 @@ jobs:
           context: ./VarifyServer
           file: ./VarifyServer/Dockerfile
           push: true
-          cache-from: type=registry, ref=ghcr.io/${{ github.repository }}/varifyserver:cache
-          cache-to: type=registry, ref=ghcr.io/${{ github.repository }}/varifyserver:cache, mode=max
+          cache-from: type=registry, ref=ghcr.io/${{ github.repository_owner }}/varifyserver:cache
+          cache-to: type=registry, ref=ghcr.io/${{ github.repository_owner }}/varifyserver:cache, mode=max
           tags: ghcr.io/${{ github.repository_owner }}/varifyserver:latest
 
       - name: Deploy to Cloud Server via SSH
