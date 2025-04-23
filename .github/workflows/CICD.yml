@@ -78,14 +78,14 @@ jobs:
 
       - name: Deploy to Cloud Server via SSH
         uses: appleboy/ssh-action@master
-        timeout-minutes: 20
+        timeout-minutes: 60
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 1022
-          timeout: 30m
-          command_timeout: 30m
+          timeout: 60m
+          command_timeout: 60m
           script: |
             cd CChat
             docker compose pull
