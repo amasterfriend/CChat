@@ -84,6 +84,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 1022
+          timeout: 1800
           script: |
             cd CChat
             docker compose pull
