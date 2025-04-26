@@ -9,7 +9,7 @@ MysqlDao::MysqlDao()
 	const auto& pwd = cfg["Mysql"]["Passwd"];
 	const auto& schema = cfg["Mysql"]["Schema"];
 	const auto& user = cfg["Mysql"]["User"];
-	pool_.reset(new MySqlPool(host + ":" + port, user, pwd, schema, 5));
+	pool_.reset(new MySqlPool(host + ":" + port, user, pwd, schema, 15));
 }
 
 MysqlDao::~MysqlDao() {
