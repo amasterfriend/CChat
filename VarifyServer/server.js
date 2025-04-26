@@ -35,8 +35,9 @@ async function GetVarifyCode(call, callback) {
             text: text_str,
         };
     
-        let send_res = await emailModule.SendMail(mailOptions);
-        console.log("send res is ", send_res)
+        //测试环境暂时不发送邮件
+        // let send_res = await emailModule.SendMail(mailOptions);
+        // console.log("send res is ", send_res)
 
         callback(null, { email:  call.request.email,
             error:const_module.Errors.Success
