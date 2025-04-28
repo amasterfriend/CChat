@@ -50,6 +50,16 @@ void RPConPool::returnConnection(std::unique_ptr<VarifyService::Stub> context)
 
 GetVarifyRsp VerifyGrpcClient::GetVarifyCode(std::string email)
 {
+    {
+    std::lock_guard<std::mutex> lock(cache_mutex_);
+    auto it = cache_.find(email);
+    if (it != cache_.end()) {
+        auto now = std::chrono::steady_clock::now();
+        if (now - it->second.second < std::chrono::seconds(60)) { // 缓存有效期60秒
+            return it->second.first; // 直接返回缓存
+        }
+    }
+}
     ClientContext context;
     GetVarifyRsp reply;
     GetVarifyReq request;
@@ -59,11 +69,15 @@ GetVarifyRsp VerifyGrpcClient::GetVarifyCode(std::string email)
 
     if (status.ok()) {
         pool_->returnConnection(std::move(stub));
-        return reply;
     }
     else {
         pool_->returnConnection(std::move(stub));
         reply.set_error(ErrorCodes::RPCFailed);
-        return reply;
     }
+    // 成功才缓存
+    if (reply.error() == 0) {
+    std::lock_guard<std::mutex> lock(cache_mutex_);
+    cache_[email] = { reply, std::chrono::steady_clock::now() };
+    }
+    return reply;
 }

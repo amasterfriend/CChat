@@ -63,7 +63,8 @@ private:
 
 	//信使Gate服务端和grpc服务端的通信
     /*std::unique_ptr<VarifyService::Stub> stub_;*/
-
+    std::unordered_map<std::string, std::pair<GetVarifyRsp, std::chrono::steady_clock::time_point>> cache_;
+    std::mutex cache_mutex_;
     std::unique_ptr<RPConPool> pool_;
 };
 
