@@ -126,7 +126,7 @@ int main()
     try
     {
         unsigned short port = static_cast<unsigned short>(8080);
-        net::io_context ioc{ 1 };
+        net::io_context ioc{};
         boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
         signals.async_wait([&ioc](const boost::system::error_code& error, int signal_number) {
             if (error) {
@@ -136,7 +136,20 @@ int main()
             });
         std::make_shared<CServer>(ioc, port)->Start();
 		std::cout << "Gate Server listen on port: " << port << std::endl;
+        // 启动多线程处理
+        std::vector<std::thread> threads;
+        int thread_num = std::thread::hardware_concurrency(); // 系统CPU核心数
+        if (thread_num == 0) thread_num = 4; //保险起见
+        for (int i = 0; i < thread_num; ++i) {
+            threads.emplace_back([&ioc]() {
+                ioc.run();
+            });
+        }
         ioc.run();
+        // 等待所有线程结束
+        for (auto& t : threads) {
+            t.join();
+        }
     }
     catch (std::exception const& e)
     {
